@@ -312,7 +312,7 @@
 
 ### IP 名单下发规则
 - **Nginx**：`blacklist.map` 中先写 `allow <白名单>`，再写 `deny <黑名单>`，最后 `allow all;`（`allow/deny` 先匹配先生效，白名单可覆盖黑名单）；
-- **Apache**：白名单生成 `RewriteCond %{REMOTE_ADDR}` + `RewriteRule ^ - [L]` 直接放行，黑名单生成条件链命中后 `[F]` 返回 403；只支持精确 IP 与 `/8 /16 /24 /32`（单站点最多 200 条，其余由 Nginx 承担）；
+- **Apache**：白名单生成 `RewriteCond %{REMOTE_ADDR}` + `RewriteRule ^ - [L]` 直接放行，黑名单生成条件链命中后 `[F]` 返回 403；特征规则单站点最多 80 条、IP 名单最多 200 条（其余由 Nginx 承担）；精确 IP 与 `/0~/23`、`/28~/31` 中可枚举的网段可用，更细的 `/25~/27` 仅 Nginx 生效；
 - 任何 IP 名单增删改（含批量）都会重写名单文件 → `nginx -t` / `httpd -t` 校验 → reload，失败时保留原配置继续服务。
 
 ### 下发安全机制
